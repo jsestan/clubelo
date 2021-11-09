@@ -1,0 +1,5 @@
+argparse==1.1
+datetime==4.3
+requests==2.26.0
+boto3==1.18.59
+psycopg2==2.9.1

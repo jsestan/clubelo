@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  parameter-store:
+    ACCOUNT_ID: "ucdb-account_id"
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - $(aws ecr get-login --no-include-email --region eu-west-1)
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/clubelo
+  build:
+    commands:
+      - echo "Build started on `date`"
+      - echo "Building the Docker image..."
+      - docker build -t $REPOSITORY_URI:latest -f Dockerfile .
+      - echo "Tagging the Docker image..."
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:latest
+  post_build:
+    commands:
+      - echo "Pushing the Docker image..."
+      - docker push $REPOSITORY_URI:latest
+      - echo "Build completed on `date`"
